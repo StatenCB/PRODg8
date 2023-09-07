@@ -37,9 +37,26 @@ class AResidenceEvilCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* FeelRightAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* FeelLeftAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* FeelForwardAction;
+	
+
 public:
 	AResidenceEvilCharacter();
-	
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Arm")
+	TSubclassOf<class AArmActor> ArmClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="Arm")
+	AArmActor* Arm;
+			
 
 protected:
 
@@ -47,9 +64,17 @@ protected:
 	void Move(const FInputActionValue& Value);
 
 	/** Called for looking input */
-	void Look(const FInputActionValue& Value);
-			
+	void MoveArm(const FInputActionValue& Value);
 
+	UFUNCTION()
+	void FeelRight();
+
+	UFUNCTION()
+	void FeelLeft();
+
+	UFUNCTION()
+	void FeelForward();
+	
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
