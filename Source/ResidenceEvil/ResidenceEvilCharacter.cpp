@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ResidenceEvilCharacter.h"
+
+#include "ArmActor.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -9,6 +11,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -46,6 +50,8 @@ AResidenceEvilCharacter::AResidenceEvilCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+	
+
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -64,6 +70,14 @@ void AResidenceEvilCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+
+	/*
+	Arm = GetWorld()->SpawnActor<AArmActor>(ArmClass);
+	FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::KeepWorld, true);
+	Arm->AttachToComponent(GetMesh(), AttachmentTransformRules, TEXT("spine_04"));
+	Arm->SetActorRelativeRotation(FRotator(0, 0, 90));
+	Arm->SetActorScale3D(FVector(0.25, 0.25, 1));
+	*/
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -78,7 +92,16 @@ void AResidenceEvilCharacter::SetupPlayerInputComponent(class UInputComponent* P
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AResidenceEvilCharacter::Move);
 
 		//Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AResidenceEvilCharacter::Look);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AResidenceEvilCharacter::MoveArm);
+
+		//Arm movement
+		EnhancedInputComponent->BindAction(FeelRightAction, ETriggerEvent::Triggered, this, &AResidenceEvilCharacter::FeelRight);
+
+		//Arm movement
+		EnhancedInputComponent->BindAction(FeelLeftAction, ETriggerEvent::Triggered, this, &AResidenceEvilCharacter::FeelLeft);
+
+		//Arm movement
+		EnhancedInputComponent->BindAction(FeelForwardAction, ETriggerEvent::Triggered, this, &AResidenceEvilCharacter::FeelForward);
 
 	}
 
@@ -112,17 +135,69 @@ void AResidenceEvilCharacter::Move(const FInputActionValue& Value)
 	}
 }
 
-void AResidenceEvilCharacter::Look(const FInputActionValue& Value)
+void AResidenceEvilCharacter::MoveArm(const FInputActionValue& Value)
 {
-	/*/ input is a Vector2D
+	
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
+	//FRotator NewRotator = LookAxisVector.Rp;
 
 	if (Controller != nullptr)
 	{
 		// add yaw and pitch input to controller
-		AddControllerYawInput(LookAxisVector.X);
+		//Arm->SetActorRelativeRotation(NewRotator);
 		AddControllerPitchInput(LookAxisVector.Y);
-	}*/
+	}
+}
+
+void AResidenceEvilCharacter::FeelRight()
+{
+	FHitResult HitResult;
+	FVector Origin, Extent;
+	GetActorBounds(true, Origin, Extent);
+
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
+	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Visibility));
+
+	TArray<AActor*> IgnoredActors = TArray<AActor*>();
+	IgnoredActors.Add(this);
+
+	bool bHit;
+
+	bHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), GetActorLocation(), GetActorLocation() + GetActorRightVector() * 200.f, ObjectTypes, true, IgnoredActors, EDrawDebugTrace::ForOneFrame, HitResult, true, FLinearColor::Red, FLinearColor::Blue, 0.f);
+}
+
+void AResidenceEvilCharacter::FeelLeft()
+{
+	FHitResult HitResult;
+	FVector Origin, Extent;
+	GetActorBounds(true, Origin, Extent);
+
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
+	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Visibility));
+
+	TArray<AActor*> IgnoredActors = TArray<AActor*>();
+	IgnoredActors.Add(this);
+
+	bool bHit;
+
+	bHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), GetActorLocation(), GetActorLocation() - GetActorRightVector()* 200.f, ObjectTypes, true, IgnoredActors, EDrawDebugTrace::ForOneFrame, HitResult, true, FLinearColor::Red, FLinearColor::Blue, 0.f);
+}
+
+void AResidenceEvilCharacter::FeelForward()
+{
+	FHitResult HitResult;
+	FVector Origin, Extent;
+	GetActorBounds(true, Origin, Extent);
+
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
+	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Visibility));
+
+	TArray<AActor*> IgnoredActors = TArray<AActor*>();
+	IgnoredActors.Add(this);
+
+	bool bHit;
+
+	bHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), GetActorLocation(), GetActorLocation() + GetActorForwardVector() * 200.f, ObjectTypes, true, IgnoredActors, EDrawDebugTrace::ForOneFrame, HitResult, true, FLinearColor::Red, FLinearColor::Blue, 0.f);
 }
 
 
