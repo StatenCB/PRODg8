@@ -13,5 +13,17 @@ UCLASS()
 class RESIDENCEEVIL_API ABattery : public AInteractableObject
 {
 	GENERATED_BODY()
+
+public:
+
+	ABattery();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USphereComponent* PickUpArea;
+
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 	
 };

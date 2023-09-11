@@ -15,6 +15,9 @@ public:
 	// Sets default values for this actor's properties
 	AInteractableObject();
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	class USphereComponent* InteractableArea;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
