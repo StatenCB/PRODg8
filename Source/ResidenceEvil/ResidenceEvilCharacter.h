@@ -75,6 +75,13 @@ protected:
 	UFUNCTION()
 	void FeelForward();
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Arm")
+    float FeelRange;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void FeltSomething(FHitResult Result);
+
+	
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
