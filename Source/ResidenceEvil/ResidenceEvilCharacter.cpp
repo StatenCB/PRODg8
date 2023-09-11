@@ -103,6 +103,10 @@ void AResidenceEvilCharacter::SetupPlayerInputComponent(class UInputComponent* P
 		//Arm movement
 		EnhancedInputComponent->BindAction(FeelForwardAction, ETriggerEvent::Triggered, this, &AResidenceEvilCharacter::FeelForward);
 
+		//Pick up
+		EnhancedInputComponent->BindAction(PickUpObjectAction, ETriggerEvent::Triggered, this, &AResidenceEvilCharacter::PickUpObject);
+
+
 	}
 
 }
@@ -212,6 +216,11 @@ void AResidenceEvilCharacter::FeelForward()
 		//HitActor = HitResult;
 		FeltSomething(HitResult);
 	}
+}
+
+void AResidenceEvilCharacter::PickUpObject()
+{
+	bIsPickingUp = true;
 }
 
 
