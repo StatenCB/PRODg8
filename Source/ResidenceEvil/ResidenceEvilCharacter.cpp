@@ -161,9 +161,13 @@ void AResidenceEvilCharacter::FeelRight()
 	TArray<AActor*> IgnoredActors = TArray<AActor*>();
 	IgnoredActors.Add(this);
 
-	bool bHit;
+	bool bHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), GetActorLocation(), GetActorLocation() + GetActorRightVector()* FeelRange, ObjectTypes, true, IgnoredActors, EDrawDebugTrace::ForOneFrame, HitResult, true, FLinearColor::Red, FLinearColor::Blue, 0.f);
 
-	bHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), GetActorLocation(), GetActorLocation() + GetActorRightVector() * 200.f, ObjectTypes, true, IgnoredActors, EDrawDebugTrace::ForOneFrame, HitResult, true, FLinearColor::Red, FLinearColor::Blue, 0.f);
+	if (bHit)
+	{
+		//HitActor = HitResult;
+		FeltSomething(HitResult);
+	}
 }
 
 void AResidenceEvilCharacter::FeelLeft()
@@ -178,14 +182,19 @@ void AResidenceEvilCharacter::FeelLeft()
 	TArray<AActor*> IgnoredActors = TArray<AActor*>();
 	IgnoredActors.Add(this);
 
-	bool bHit;
+	bool bHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), GetActorLocation(), GetActorLocation() - GetActorRightVector()* FeelRange, ObjectTypes, true, IgnoredActors, EDrawDebugTrace::ForOneFrame, HitResult, true, FLinearColor::Red, FLinearColor::Blue, 0.f);
 
-	bHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), GetActorLocation(), GetActorLocation() - GetActorRightVector()* 200.f, ObjectTypes, true, IgnoredActors, EDrawDebugTrace::ForOneFrame, HitResult, true, FLinearColor::Red, FLinearColor::Blue, 0.f);
+	if (bHit)
+	{
+		//HitActor = HitResult;
+		FeltSomething(HitResult);
+	}
 }
 
 void AResidenceEvilCharacter::FeelForward()
 {
 	FHitResult HitResult;
+
 	FVector Origin, Extent;
 	GetActorBounds(true, Origin, Extent);
 
@@ -195,9 +204,14 @@ void AResidenceEvilCharacter::FeelForward()
 	TArray<AActor*> IgnoredActors = TArray<AActor*>();
 	IgnoredActors.Add(this);
 
-	bool bHit;
+	bool bHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), GetActorLocation(), GetActorLocation() + GetActorForwardVector() * FeelRange, ObjectTypes, true, IgnoredActors, EDrawDebugTrace::ForOneFrame, HitResult, true, FLinearColor::Red, FLinearColor::Blue, 0.f);
 
-	bHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), GetActorLocation(), GetActorLocation() + GetActorForwardVector() * 200.f, ObjectTypes, true, IgnoredActors, EDrawDebugTrace::ForOneFrame, HitResult, true, FLinearColor::Red, FLinearColor::Blue, 0.f);
+
+	if (bHit)
+	{
+		//HitActor = HitResult;
+		FeltSomething(HitResult);
+	}
 }
 
 
