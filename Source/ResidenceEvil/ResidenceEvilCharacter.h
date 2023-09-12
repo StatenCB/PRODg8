@@ -8,6 +8,7 @@
 #include "ResidenceEvilCharacter.generated.h"
 
 
+class UBoxComponent;
 class AInteractableObject;
 
 UCLASS(config=Game)
@@ -51,18 +52,28 @@ class AResidenceEvilCharacter : public ACharacter
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* PickUpObjectAction;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* StopFeelingAction;
+
+
 
 public:
 	AResidenceEvilCharacter();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Arm")
-	TSubclassOf<class AArmActor> ArmClass;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="Arm")
+	UBoxComponent* RightArmBox;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="Arm")
+	UBoxComponent* LeftArmBox;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="Arm")
-	AArmActor* Arm;
+	UBoxComponent* ForwardArmBox;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="Arm")
+	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int NumberOfBatteries = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="Pickup")
@@ -93,6 +104,9 @@ protected:
 
 	UFUNCTION()
 	void PickUpObject();
+
+	UFUNCTION()
+	void StopFeeling();
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Arm")
     float FeelRange;
@@ -100,7 +114,7 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void FeltSomething(FHitResult Result);
 
-	
+
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

@@ -12,6 +12,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InteractableObject.h"
+#include "Components/BoxComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -52,8 +53,17 @@ AResidenceEvilCharacter::AResidenceEvilCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	
+	
 
+	RightArmBox = CreateDefaultSubobject<UBoxComponent>(TEXT("RightArm"));
+	RightArmBox->SetupAttachment(RootComponent);
 
+	LeftArmBox = CreateDefaultSubobject<UBoxComponent>(TEXT("LeftArmBox"));
+	LeftArmBox->SetupAttachment(RootComponent);
+
+	ForwardArmBox = CreateDefaultSubobject<UBoxComponent>(TEXT("ForwardArmBox"));
+	ForwardArmBox->SetupAttachment(RootComponent);
+	
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
@@ -72,13 +82,7 @@ void AResidenceEvilCharacter::BeginPlay()
 		}
 	}
 
-	/*
-	Arm = GetWorld()->SpawnActor<AArmActor>(ArmClass);
-	FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::KeepWorld, true);
-	Arm->AttachToComponent(GetMesh(), AttachmentTransformRules, TEXT("spine_04"));
-	Arm->SetActorRelativeRotation(FRotator(0, 0, 90));
-	Arm->SetActorScale3D(FVector(0.25, 0.25, 1));
-	*/
+	StopFeeling();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -104,12 +108,12 @@ void AResidenceEvilCharacter::SetupPlayerInputComponent(class UInputComponent* P
 		//Arm movement
 		EnhancedInputComponent->BindAction(FeelForwardAction, ETriggerEvent::Triggered, this, &AResidenceEvilCharacter::FeelForward);
 
+		//StopFeeling
+		EnhancedInputComponent->BindAction(StopFeelingAction, ETriggerEvent::Triggered, this, &AResidenceEvilCharacter::StopFeeling);
+
 		//Pick up
 		EnhancedInputComponent->BindAction(PickUpObjectAction, ETriggerEvent::Triggered, this, &AResidenceEvilCharacter::PickUpObject);
-
-
 	}
-
 }
 
 void AResidenceEvilCharacter::RemovePickUp()
@@ -119,6 +123,7 @@ void AResidenceEvilCharacter::RemovePickUp()
 
 void AResidenceEvilCharacter::Move(const FInputActionValue& Value)
 {
+	
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
@@ -161,6 +166,10 @@ void AResidenceEvilCharacter::MoveArm(const FInputActionValue& Value)
 
 void AResidenceEvilCharacter::FeelRight()
 {
+	LeftArmBox->SetCollisionProfileName("NoCollision");
+	RightArmBox->SetCollisionProfileName("OverlapAllDynamic");
+	ForwardArmBox->SetCollisionProfileName("NoCollision");
+	/*
 	FHitResult HitResult;
 	FVector Origin, Extent;
 	GetActorBounds(true, Origin, Extent);
@@ -178,10 +187,15 @@ void AResidenceEvilCharacter::FeelRight()
 		//HitActor = HitResult;
 		FeltSomething(HitResult);
 	}
+	*/
 }
 
 void AResidenceEvilCharacter::FeelLeft()
 {
+	LeftArmBox->SetCollisionProfileName("OverlapAllDynamic");
+	RightArmBox->SetCollisionProfileName("NoCollision");
+	ForwardArmBox->SetCollisionProfileName("NoCollision");
+	/*
 	FHitResult HitResult;
 	FVector Origin, Extent;
 	GetActorBounds(true, Origin, Extent);
@@ -199,10 +213,15 @@ void AResidenceEvilCharacter::FeelLeft()
 		//HitActor = HitResult;
 		FeltSomething(HitResult);
 	}
+	*/
 }
 
 void AResidenceEvilCharacter::FeelForward()
 {
+	LeftArmBox->SetCollisionProfileName("NoCollision");
+	RightArmBox->SetCollisionProfileName("NoCollision");
+	ForwardArmBox->SetCollisionProfileName("OverlapAllDynamic");
+	/*
 	FHitResult HitResult;
 
 	FVector Origin, Extent;
@@ -222,6 +241,7 @@ void AResidenceEvilCharacter::FeelForward()
 		//HitActor = HitResult;
 		FeltSomething(HitResult);
 	}
+	*/
 }
 
 void AResidenceEvilCharacter::PickUpObject()
@@ -236,6 +256,13 @@ void AResidenceEvilCharacter::PickUpObject()
 			
 		}
 	}
+}
+
+void AResidenceEvilCharacter::StopFeeling()
+{
+	LeftArmBox->SetCollisionProfileName("NoCollision");
+	RightArmBox->SetCollisionProfileName("NoCollision");
+	ForwardArmBox->SetCollisionProfileName("NoCollision");
 }
 
 
