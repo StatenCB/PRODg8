@@ -11,6 +11,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "InteractableObject.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -109,6 +110,11 @@ void AResidenceEvilCharacter::SetupPlayerInputComponent(class UInputComponent* P
 
 	}
 
+}
+
+void AResidenceEvilCharacter::RemovePickUp()
+{
+	CurrentPickUp = nullptr;
 }
 
 void AResidenceEvilCharacter::Move(const FInputActionValue& Value)
@@ -220,7 +226,16 @@ void AResidenceEvilCharacter::FeelForward()
 
 void AResidenceEvilCharacter::PickUpObject()
 {
-	bIsPickingUp = true;
+	if (bCanPickUp)
+	{
+		NumberOfBatteries++;
+		if (CurrentPickUp)
+		{
+			bCanPickUp = false;
+			CurrentPickUp->OnPickUpDestroy();
+			
+		}
+	}
 }
 
 
