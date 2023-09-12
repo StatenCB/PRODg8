@@ -8,6 +8,8 @@
 #include "ResidenceEvilCharacter.generated.h"
 
 
+class AInteractableObject;
+
 UCLASS(config=Game)
 class AResidenceEvilCharacter : public ACharacter
 {
@@ -63,9 +65,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="Arm")
 	int NumberOfBatteries = 0;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category ="Pickup")
-	bool bIsPickingUp = false;
-			
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="Pickup")
+	bool bCanPickUp = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AInteractableObject* CurrentPickUp;
+
+	UFUNCTION(BlueprintCallable)
+	void RemovePickUp();
 
 protected:
 
