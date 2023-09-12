@@ -46,6 +46,9 @@ class AResidenceEvilCharacter : public ACharacter
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* FeelForwardAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* PickUpObjectAction;
 	
 
 public:
@@ -56,6 +59,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="Arm")
 	AArmActor* Arm;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="Arm")
+	int NumberOfBatteries = 0;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category ="Pickup")
+	bool bIsPickingUp = false;
 			
 
 protected:
@@ -74,6 +83,16 @@ protected:
 
 	UFUNCTION()
 	void FeelForward();
+
+	UFUNCTION()
+	void PickUpObject();
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Arm")
+    float FeelRange;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void FeltSomething(FHitResult Result);
+
 	
 protected:
 	// APawn interface
