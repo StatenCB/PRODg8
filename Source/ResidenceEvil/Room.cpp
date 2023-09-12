@@ -23,6 +23,7 @@ void ARoom::StartFire()
 
 void ARoom::SpreadFire()
 {
+	bFireSpread = true;
 	for(ARoom* Room : NeighboringRooms)
 	{
 		Room->StartFire();
@@ -40,5 +41,14 @@ void ARoom::BeginPlay()
 void ARoom::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if(bFireStarted)
+	{
+		FireLevel += DeltaTime;
+		if(!bFireSpread && FireLevel > FireSpreadThreshold)
+		{
+			SpreadFire();
+		}
+	}
 }
 

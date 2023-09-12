@@ -51,4 +51,6 @@ public:
 
 private:
 	void SpreadFire();
+
+	bool bFireSpread = false;
 };
