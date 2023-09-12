@@ -3,7 +3,9 @@
 
 #include "Room.h"
 
+#include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -14,15 +16,20 @@ ARoom::ARoom()
 
 	RoomBounds = CreateDefaultSubobject<UBoxComponent>(TEXT("RoomBounds"));
 	RootComponent = RoomBounds;
+
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
+	AudioComponent->SetupAttachment(RoomBounds);
 }
 
 void ARoom::StartFire()
 {
 	bFireStarted = true;
+	AudioComponent->Play();
 }
 
 void ARoom::SpreadFire()
 {
+	bFireSpread = true;
 	for(ARoom* Room : NeighboringRooms)
 	{
 		Room->StartFire();
@@ -33,12 +40,26 @@ void ARoom::SpreadFire()
 void ARoom::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	AudioComponent->SetSound(FireSound);
 }
 
 // Called every frame
 void ARoom::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if(bFireStarted)
+	{
+		FireLevel += DeltaTime;
+		if(!bFireSpread && FireLevel > FireSpreadThreshold)
+		{
+			SpreadFire();
+		}
+		if(!bKilledPlayer && bPlayerInRoom && FireLevel > FireSpreadThreshold)
+		{
+			bKilledPlayer = true;
+			UGameplayStatics::PlaySound2D(this, GameOverSound);
+		}
+	}
 }
 
