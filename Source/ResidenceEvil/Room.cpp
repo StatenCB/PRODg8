@@ -59,7 +59,16 @@ void ARoom::Tick(float DeltaTime)
 		{
 			bKilledPlayer = true;
 			UGameplayStatics::PlaySound2D(this, GameOverSound);
+			FTimerHandle TimerHandle;
+			
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ARoom::ResetLevel, 2.0f); 
 		}
 	}
 }
+
+void ARoom::ResetLevel() const
+{
+	UGameplayStatics::OpenLevelBySoftObjectPtr(this,LevelToLoad);
+}
+
 
