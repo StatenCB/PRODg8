@@ -68,6 +68,9 @@ public:
 private:
 	void SpreadFire();
 
+	UPROPERTY(EditAnywhere)
+	float TimeUntilRestart;
+	
 	void ResetLevel() const;
 	bool bFireSpread = false;
 	bool bKilledPlayer = false;
