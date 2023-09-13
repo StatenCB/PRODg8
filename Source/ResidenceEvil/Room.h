@@ -50,7 +50,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	bool bFireStarted = false;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bPlayerInRoom = false;
 
 	UPROPERTY(EditAnywhere)
