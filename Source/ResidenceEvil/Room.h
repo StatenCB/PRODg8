@@ -62,9 +62,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void StartFire();
 
+	UPROPERTY(EditAnywhere)
+	TSoftObjectPtr<UWorld> LevelToLoad;
+
 private:
 	void SpreadFire();
 
+	void ResetLevel() const;
 	bool bFireSpread = false;
 	bool bKilledPlayer = false;
 };
