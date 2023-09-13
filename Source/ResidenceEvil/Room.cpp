@@ -61,7 +61,7 @@ void ARoom::Tick(float DeltaTime)
 			UGameplayStatics::PlaySound2D(this, GameOverSound);
 			FTimerHandle TimerHandle;
 			
-			GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ARoom::ResetLevel, 2.0f); 
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ARoom::ResetLevel, TimeUntilRestart); 
 		}
 	}
 }
