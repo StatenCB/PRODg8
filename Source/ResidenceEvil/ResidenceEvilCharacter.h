@@ -76,6 +76,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int NumberOfBatteries = 0;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bHasCarBattery;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="Pickup")
 	bool bCanPickUp = false;
 
