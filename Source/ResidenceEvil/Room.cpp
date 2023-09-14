@@ -51,6 +51,7 @@ void ARoom::Tick(float DeltaTime)
 	if(bFireStarted)
 	{
 		FireLevel += DeltaTime;
+		AudioComponent->VolumeMultiplier = 0.5 + (FireLevel/FireDeathThreshold) * 4;
 		if(!bFireSpread && FireLevel > FireSpreadThreshold)
 		{
 			SpreadFire();
