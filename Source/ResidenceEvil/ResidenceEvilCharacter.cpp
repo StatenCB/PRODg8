@@ -113,6 +113,9 @@ void AResidenceEvilCharacter::SetupPlayerInputComponent(class UInputComponent* P
 
 		//Pick up
 		EnhancedInputComponent->BindAction(PickUpObjectAction, ETriggerEvent::Triggered, this, &AResidenceEvilCharacter::PickUpObject);
+
+		//Open Door
+		EnhancedInputComponent->BindAction(OpenDoorAction, ETriggerEvent::Triggered, this, &AResidenceEvilCharacter::OpenDoor);
 	}
 }
 
@@ -264,6 +267,18 @@ void AResidenceEvilCharacter::StopFeeling()
 	RightArmBox->SetCollisionProfileName("NoCollision");
 	ForwardArmBox->SetCollisionProfileName("NoCollision");
 }
+
+void AResidenceEvilCharacter::OpenDoor()
+{
+	if (bCanOpen)
+	
+		if (CurrentDoor)
+		{
+			CurrentDoor->MovePlayer();
+		}
+	}
+}
+
 
 
 
