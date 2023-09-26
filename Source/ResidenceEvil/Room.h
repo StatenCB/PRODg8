@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Room.generated.h"
 
+class AFireActor;
 class USoundCue;
 class UBoxComponent;
 
@@ -25,7 +26,8 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	
+
+
 	UPROPERTY(EditAnywhere)
 	double FireLevel;
 
@@ -41,6 +43,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	UAudioComponent* AudioComponent;
 
+	UPROPERTY(EditAnywhere)
+	TArray<AFireActor*> FireActors;
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<ARoom> RoomClass;
 	
@@ -53,8 +58,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bPlayerInRoom = false;
 
-	UPROPERTY(EditAnywhere)
-	USoundBase* FireSound;
+	//UPROPERTY(EditAnywhere)
+	//USoundBase* FireSound;
 
 	UPROPERTY(EditAnywhere)
 	USoundBase* GameOverSound;
@@ -74,4 +79,9 @@ private:
 	void ResetLevel() const;
 	bool bFireSpread = false;
 	bool bKilledPlayer = false;
+
+	FTimerHandle  GatherOverlappingFireActorsHandle;
+
+	
+	void GatherOverlappingFireActors();
 };
