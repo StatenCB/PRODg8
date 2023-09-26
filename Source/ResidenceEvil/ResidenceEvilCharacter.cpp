@@ -270,10 +270,13 @@ void AResidenceEvilCharacter::StopFeeling()
 
 void AResidenceEvilCharacter::OpenDoor()
 {
-	if (bCanOpen)
 	
+	if (bCanOpen)
+	{
+		
 		if (CurrentDoor)
 		{
+			
 			CurrentDoor->MovePlayer();
 		}
 	}
