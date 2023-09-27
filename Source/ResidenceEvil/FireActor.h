@@ -37,6 +37,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void StartFire();
 
+	void StartFireFromRoom(class ARoom* RoomPtr);
+
 	UPROPERTY(EditAnywhere)
 	bool bIsFirstToStartFire;
 
@@ -55,4 +57,10 @@ public:
 	UPROPERTY(EditAnywhere)
 	USoundBase* FireSound;
 
+	ACharacter* PLayerCharacter;
+
+	float DistanceToPlayer = 0.1f;
+
+	ARoom* Room = nullptr;
+	
 };

@@ -42,6 +42,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	UAudioComponent* AudioComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UAudioComponent* GuidingSoundAudioComponent;
 
 	UPROPERTY(EditAnywhere)
 	TArray<AFireActor*> FireActors;
@@ -70,6 +73,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSoftObjectPtr<UWorld> LevelToLoad;
 
+	void StartGuidingSound();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnStartingGuidingSoundEvent();
+
 private:
 	void SpreadFire();
 
@@ -81,7 +89,6 @@ private:
 	bool bKilledPlayer = false;
 
 	FTimerHandle  GatherOverlappingFireActorsHandle;
-
 	
 	void GatherOverlappingFireActors();
 };

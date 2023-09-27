@@ -20,12 +20,20 @@ ARoom::ARoom()
 
 	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
 	AudioComponent->SetupAttachment(RoomBounds);
+
+	GuidingSoundAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("GuidingSoundAudioComponent"));
+	GuidingSoundAudioComponent->SetupAttachment(RoomBounds);
 }
 
 void ARoom::StartFire()
 {
 	bFireStarted = true;
 	//AudioComponent->Play();
+}
+
+void ARoom::StartGuidingSound()
+{
+	OnStartingGuidingSoundEvent();
 }
 
 void ARoom::SpreadFire()
@@ -59,7 +67,9 @@ void ARoom::Tick(float DeltaTime)
 		{
 			if (FireActor->bIsFirstToStartFire && !FireActor->bIsSetOnFire)
 			{
-				FireActor->SpreadFire();
+				FDateTime StartTime = FDateTime::UtcNow();
+				UE_LOG(LogTemp, Display, TEXT("%s ms start"), *StartTime.ToString())
+				FireActor->StartFireFromRoom(this);
 			}
 		}
 		FireLevel += DeltaTime;

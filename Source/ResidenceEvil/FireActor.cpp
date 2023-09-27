@@ -3,8 +3,11 @@
 
 #include "FireActor.h"
 
+#include "Room.h"
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
+#include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AFireActor::AFireActor()
@@ -25,6 +28,9 @@ void AFireActor::BeginPlay()
 	Super::BeginPlay();
 
 	AudioComponent->Stop();
+
+	PLayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	ensure (PLayerCharacter != nullptr);
 }
 
 // Called every frame
@@ -34,14 +40,35 @@ void AFireActor::Tick(float DeltaTime)
 
 	if (bIsSetOnFire)
 	{
+		DistanceToPlayer = FVector::Distance(GetActorLocation(), PLayerCharacter->GetActorLocation());
+
+		//AudioComponent->VolumeMultiplier = 0.1 + (DistanceToPlayer / FireSpreadThreshold) * 0.3f;
+		if (bIsFirstToStartFire) GEngine->AddOnScreenDebugMessage(-1, 0.20f, FColor::Red, FString::Printf(TEXT("Volume multiuplier %f"), AudioComponent->VolumeMultiplier));
+
+
+		// Ensure that the VolumeMultiplier is clamped between 0.0 and 1.0
+		//AudioComponent->VolumeMultiplier = FMath::Clamp(AudioComponent->VolumeMultiplier, 0.0f, 1.0f);
+		//AudioComponent->SetVolumeMultiplier( 1 + ((DistanceToPlayer / 80.f)  * 0.3f));
+		//AudioComponent->VolumeMultiplier = FMath::Clamp(AudioComponent->VolumeMultiplier, 0.2f, 50.0f);
+		/*
 		FireLevel += DeltaTime;
-		AudioComponent->VolumeMultiplier = 0.2 + (FireLevel/FireDeathThreshold) * 2;
+		AudioComponent->VolumeMultiplier = 0.1 + (FireLevel/FireDeathThreshold) * 1.5;
+		if (bIsFirstToStartFire) GEngine->AddOnScreenDebugMessage(-1, 0.20f, FColor::Red, FString::Printf(TEXT("Volume multiuplier %f"), AudioComponent->VolumeMultiplier));
+		*/
 	}
-	
+}
+
+void AFireActor::StartFireFromRoom(ARoom* RoomPtr)
+{
+	Room = RoomPtr;
+	ensure (Room != nullptr);
+	Room->StartGuidingSound();
+	StartFire();
 }
 
 void AFireActor::StartFire()
 {
-	SpreadFire();  
+	bIsSetOnFire = true;
+	SpreadFire();
 }
 
