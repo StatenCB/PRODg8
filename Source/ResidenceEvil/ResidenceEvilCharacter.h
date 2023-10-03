@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "InteractableDoor.h"
 #include "ResidenceEvilCharacter.generated.h"
 
 
@@ -56,6 +57,9 @@ class AResidenceEvilCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* StopFeelingAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* OpenDoorAction;
+
 
 
 public:
@@ -81,6 +85,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="Pickup")
 	bool bCanPickUp = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bCanOpen = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AInteractableDoor* CurrentDoor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AInteractableObject* CurrentPickUp;
@@ -110,6 +120,9 @@ protected:
 
 	UFUNCTION()
 	void StopFeeling();
+
+	UFUNCTION()
+	void OpenDoor();
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Arm")
     float FeelRange;
