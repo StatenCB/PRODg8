@@ -42,6 +42,8 @@ void AWinArea::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 	if(Character && Character->bHasCarBattery)
 	{
 		WinGame();
+		FDateTime EndTime = FDateTime::UtcNow();
+		UE_LOG(LogTemp, Display, TEXT("%s ms start"), *EndTime.ToString())
 	}
 }
 

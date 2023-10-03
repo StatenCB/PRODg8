@@ -3,6 +3,7 @@
 
 #include "Room.h"
 
+#include "FireActor.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -19,12 +20,20 @@ ARoom::ARoom()
 
 	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
 	AudioComponent->SetupAttachment(RoomBounds);
+
+	GuidingSoundAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("GuidingSoundAudioComponent"));
+	GuidingSoundAudioComponent->SetupAttachment(RoomBounds);
 }
 
 void ARoom::StartFire()
 {
 	bFireStarted = true;
-	AudioComponent->Play();
+	//AudioComponent->Play();
+}
+
+void ARoom::StartGuidingSound()
+{
+	OnStartingGuidingSoundEvent();
 }
 
 void ARoom::SpreadFire()
@@ -40,7 +49,10 @@ void ARoom::SpreadFire()
 void ARoom::BeginPlay()
 {
 	Super::BeginPlay();
-	AudioComponent->SetSound(FireSound);
+	//AudioComponent->SetSound(FireSound);
+
+	GetWorldTimerManager().SetTimer(GatherOverlappingFireActorsHandle, this, &ARoom::GatherOverlappingFireActors, 0.1f, false);
+	
 }
 
 // Called every frame
@@ -50,12 +62,23 @@ void ARoom::Tick(float DeltaTime)
 
 	if(bFireStarted)
 	{
+		
+		for (AFireActor* FireActor : FireActors)
+		{
+			if (FireActor->bIsFirstToStartFire && !FireActor->bIsSetOnFire)
+			{
+				FDateTime StartTime = FDateTime::UtcNow();
+				UE_LOG(LogTemp, Display, TEXT("%s ms start"), *StartTime.ToString())
+				FireActor->StartFireFromRoom(this);
+			}
+		}
 		FireLevel += DeltaTime;
-		AudioComponent->VolumeMultiplier = 0.2 + (FireLevel/FireDeathThreshold) * 2;
+		//AudioComponent->VolumeMultiplier = 0.2 + (FireLevel/FireDeathThreshold) * 2;
 		if(!bFireSpread && FireLevel > FireSpreadThreshold)
 		{
 			SpreadFire();
 		}
+		
 		if(!bKilledPlayer && bPlayerInRoom && FireLevel > FireSpreadThreshold)
 		{
 			bKilledPlayer = true;
@@ -67,9 +90,23 @@ void ARoom::Tick(float DeltaTime)
 	}
 }
 
+
 void ARoom::ResetLevel() const
 {
 	UGameplayStatics::OpenLevelBySoftObjectPtr(this,LevelToLoad);
+}
+
+void ARoom::GatherOverlappingFireActors()
+{
+	// populate array with all overlapping fire actors
+	TArray<AActor*> OverlappingFireActors;
+	RoomBounds->GetOverlappingActors(OverlappingFireActors, AFireActor::StaticClass());
+	for(AActor* OverlappingActor : OverlappingFireActors)
+	{
+		AFireActor* FireActor = Cast<AFireActor>(OverlappingActor);
+		if(ensure( FireActor != nullptr)) FireActors.Add(FireActor);
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Added %i fireactors"), FireActors.Num());
 }
 
 
