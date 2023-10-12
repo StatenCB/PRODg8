@@ -12,6 +12,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InteractableObject.h"
+#include "Room.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -69,6 +70,23 @@ AResidenceEvilCharacter::AResidenceEvilCharacter()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
 
+void AResidenceEvilCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	// Update the timer.
+	if (!bCanCheckForBatteries)
+	{
+		CanCheckBatteriesTimer += DeltaSeconds;
+		if (CanCheckBatteriesTimer >= CheckForBatteriesFeedbackCooldown)
+		{
+			bCanCheckForBatteries = true;
+			OnCanCheckForBatteries();
+			CanCheckBatteriesTimer = 0.0f;
+		}
+	}
+}
+
 void AResidenceEvilCharacter::BeginPlay()
 {
 	// Call the base class  
@@ -85,6 +103,7 @@ void AResidenceEvilCharacter::BeginPlay()
 
 	StopFeeling();
 }
+
 
 //////////////////////////////////////////////////////////////////////////
 // Input
@@ -117,6 +136,9 @@ void AResidenceEvilCharacter::SetupPlayerInputComponent(class UInputComponent* P
 
 		//Open Door
 		EnhancedInputComponent->BindAction(OpenDoorAction, ETriggerEvent::Triggered, this, &AResidenceEvilCharacter::OpenDoor);
+
+		//Get battery count
+		EnhancedInputComponent->BindAction(CheckForBatteriesAction, ETriggerEvent::Triggered, this, &AResidenceEvilCharacter::TryCheckForBatteries);
 	}
 }
 
@@ -173,25 +195,6 @@ void AResidenceEvilCharacter::FeelRight()
 	LeftArmBox->SetCollisionProfileName("NoCollision");
 	RightArmBox->SetCollisionProfileName("OverlapAllDynamic");
 	ForwardArmBox->SetCollisionProfileName("NoCollision");
-	/*
-	FHitResult HitResult;
-	FVector Origin, Extent;
-	GetActorBounds(true, Origin, Extent);
-
-	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
-	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Visibility));
-
-	TArray<AActor*> IgnoredActors = TArray<AActor*>();
-	IgnoredActors.Add(this);
-
-	bool bHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), GetActorLocation(), GetActorLocation() + GetActorRightVector()* FeelRange, ObjectTypes, true, IgnoredActors, EDrawDebugTrace::ForOneFrame, HitResult, true, FLinearColor::Red, FLinearColor::Blue, 0.f);
-
-	if (bHit)
-	{
-		//HitActor = HitResult;
-		FeltSomething(HitResult);
-	}
-	*/
 }
 
 void AResidenceEvilCharacter::FeelLeft()
@@ -199,25 +202,6 @@ void AResidenceEvilCharacter::FeelLeft()
 	LeftArmBox->SetCollisionProfileName("OverlapAllDynamic");
 	RightArmBox->SetCollisionProfileName("NoCollision");
 	ForwardArmBox->SetCollisionProfileName("NoCollision");
-	/*
-	FHitResult HitResult;
-	FVector Origin, Extent;
-	GetActorBounds(true, Origin, Extent);
-
-	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
-	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Visibility));
-
-	TArray<AActor*> IgnoredActors = TArray<AActor*>();
-	IgnoredActors.Add(this);
-
-	bool bHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), GetActorLocation(), GetActorLocation() - GetActorRightVector()* FeelRange, ObjectTypes, true, IgnoredActors, EDrawDebugTrace::ForOneFrame, HitResult, true, FLinearColor::Red, FLinearColor::Blue, 0.f);
-
-	if (bHit)
-	{
-		//HitActor = HitResult;
-		FeltSomething(HitResult);
-	}
-	*/
 }
 
 void AResidenceEvilCharacter::FeelForward()
@@ -225,27 +209,6 @@ void AResidenceEvilCharacter::FeelForward()
 	LeftArmBox->SetCollisionProfileName("NoCollision");
 	RightArmBox->SetCollisionProfileName("NoCollision");
 	ForwardArmBox->SetCollisionProfileName("OverlapAllDynamic");
-	/*
-	FHitResult HitResult;
-
-	FVector Origin, Extent;
-	GetActorBounds(true, Origin, Extent);
-
-	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
-	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Visibility));
-
-	TArray<AActor*> IgnoredActors = TArray<AActor*>();
-	IgnoredActors.Add(this);
-
-	bool bHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), GetActorLocation(), GetActorLocation() + GetActorForwardVector() * FeelRange, ObjectTypes, true, IgnoredActors, EDrawDebugTrace::ForOneFrame, HitResult, true, FLinearColor::Red, FLinearColor::Blue, 0.f);
-
-
-	if (bHit)
-	{
-		//HitActor = HitResult;
-		FeltSomething(HitResult);
-	}
-	*/
 }
 
 void AResidenceEvilCharacter::PickUpObject()
@@ -274,16 +237,35 @@ void AResidenceEvilCharacter::OpenDoor()
 	
 	if (bCanOpen)
 	{
-		
 		if (CurrentDoor)
 		{
-			
 			CurrentDoor->MovePlayer();
 		}
 	}
 }
 
+void AResidenceEvilCharacter::TryCheckForBatteries()
+{
+	float CurrentTime = GetWorld()->GetTimeSeconds();
 
+	if (bCanCheckForBatteries)
+	{
+		CheckForBatteries();
+		TimeSinceLastBatteryCheck = CurrentTime;
+		return;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Button pressed after cooldown"));
+	OnDeniedCheckForBatteries();
+}
+
+
+void AResidenceEvilCharacter::CheckForBatteries()
+{
+	if (CurrentRoom)
+	{
+		CurrentRoom->OnCheckValidBatteries();
+	}
+}
 
 
 

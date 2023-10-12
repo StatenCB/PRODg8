@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "InteractableObject.generated.h"
 
+class ARoom;
+
 UCLASS()
 class RESIDENCEEVIL_API AInteractableObject : public AActor
 {
@@ -18,6 +20,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class USphereComponent* InteractableArea;
 
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -29,5 +32,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnPickUpDestroy();
+
+	UPROPERTY(BlueprintReadWrite)
+	ARoom* CurrentRoom = nullptr;
 
 };

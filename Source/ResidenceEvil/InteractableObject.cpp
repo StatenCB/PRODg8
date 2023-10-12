@@ -13,7 +13,7 @@ AInteractableObject::AInteractableObject()
 
 	InteractableArea = CreateDefaultSubobject<USphereComponent>(TEXT("InteractableArea"));
 	InteractableArea->SetupAttachment(RootComponent);
-
+	
 }
 
 // Called when the game starts or when spawned
