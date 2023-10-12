@@ -4,6 +4,7 @@
 #include "Room.h"
 
 #include "FireActor.h"
+#include "InteractableObject.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -36,6 +37,27 @@ void ARoom::StartGuidingSound()
 	OnStartingGuidingSoundEvent();
 }
 
+void ARoom::CheckForValidBatteries()
+{
+	TArray<AActor*> OverlappingBatteryActors;
+	RoomBounds->GetOverlappingActors(OverlappingBatteryActors, AInteractableObject::StaticClass());
+	for(AActor* OverlappingActor : OverlappingBatteryActors)
+	{
+		AInteractableObject* BatteryActor = Cast<AInteractableObject>(OverlappingActor);
+		if(ensure( BatteryActor != nullptr))
+		{
+			if (BatteryActor->ActorHasTag("Battery"))
+			{
+				BatteryCount++;
+				BatteryActor->CurrentRoom = this;
+			}
+		}
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("battery count %i"), BatteryCount);
+
+}
+
 void ARoom::SpreadFire()
 {
 	bFireSpread = true;
@@ -52,7 +74,8 @@ void ARoom::BeginPlay()
 	//AudioComponent->SetSound(FireSound);
 
 	GetWorldTimerManager().SetTimer(GatherOverlappingFireActorsHandle, this, &ARoom::GatherOverlappingFireActors, 0.1f, false);
-	
+	GetWorldTimerManager().SetTimer(GatherOverlappingBatteriesHandle, this, &ARoom::CheckForValidBatteries, 0.1f, false);
+
 }
 
 // Called every frame
