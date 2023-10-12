@@ -11,6 +11,7 @@
 
 class UBoxComponent;
 class AInteractableObject;
+class ARoom;
 
 UCLASS(config=Game)
 class AResidenceEvilCharacter : public ACharacter
@@ -60,10 +61,14 @@ class AResidenceEvilCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* OpenDoorAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* CheckForBatteriesAction;
 
 
 public:
 	AResidenceEvilCharacter();
+
+	virtual void Tick(float DeltaSeconds) override;
 
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="Arm")
@@ -74,9 +79,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="Arm")
 	UBoxComponent* ForwardArmBox;
-
 	
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int NumberOfBatteries = 0;
 
@@ -97,6 +100,24 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void RemovePickUp();
+
+	UFUNCTION()
+	void TryCheckForBatteries();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnCanCheckForBatteries();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDeniedCheckForBatteries();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CheckForBatteriesFeedbackCooldown = 2.f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	float TimeSinceLastBatteryCheck = 0.f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bCanCheckForBatteries = false;
 
 protected:
 
@@ -130,6 +151,8 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void FeltSomething(FHitResult Result);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ARoom* CurrentRoom = nullptr;
 
 protected:
 	// APawn interface
@@ -138,10 +161,16 @@ protected:
 	// To add mapping context
 	virtual void BeginPlay();
 
+	void CheckForBatteries();
+
+	float CanCheckBatteriesTimer = 0.f;
+
 public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	
 };
 

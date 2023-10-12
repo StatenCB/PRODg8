@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Room.generated.h"
 
+class AInteractableObject;
 class AFireActor;
 class USoundCue;
 class UBoxComponent;
@@ -49,6 +50,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	TArray<AFireActor*> FireActors;
 
+	UPROPERTY(EditAnywhere)
+	TArray<AInteractableObject*> BatteryActors;
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<ARoom> RoomClass;
 	
@@ -78,6 +82,15 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnStartingGuidingSoundEvent();
 
+	UFUNCTION()
+	void CheckForValidBatteries();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	int BatteryCount = 0;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnCheckValidBatteries();
+
 private:
 	void SpreadFire();
 
@@ -89,6 +102,9 @@ private:
 	bool bKilledPlayer = false;
 
 	FTimerHandle  GatherOverlappingFireActorsHandle;
+
+	FTimerHandle  GatherOverlappingBatteriesHandle;
+
 	
 	void GatherOverlappingFireActors();
 };
