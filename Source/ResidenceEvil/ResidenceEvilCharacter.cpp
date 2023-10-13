@@ -165,12 +165,12 @@ void AResidenceEvilCharacter::Move(const FInputActionValue& Value)
 		// get forward vector
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 
-		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		//const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		
 
 		// add movement 
 		AddMovementInput(ForwardDirection, MovementVector.Y);
-		AddMovementInput(RightDirection, MovementVector.X);
+		//AddMovementInput(RightDirection, MovementVector.X);
 
 		// rotate to direction
 		//AddControllerYawInput(LookAxisVector.X);
