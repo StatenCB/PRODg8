@@ -20,6 +20,9 @@ AFireActor::AFireActor()
 
 	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
 	AudioComponent->SetupAttachment(FireActorBoundsComponent);
+
+	BurstAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("BurstAudioComponent"));
+	BurstAudioComponent->SetupAttachment(FireActorBoundsComponent);
 }
 
 // Called when the game starts or when spawned
@@ -28,6 +31,7 @@ void AFireActor::BeginPlay()
 	Super::BeginPlay();
 
 	AudioComponent->Stop();
+	BurstAudioComponent->Stop();
 
 	PLayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	ensure (PLayerCharacter != nullptr);
