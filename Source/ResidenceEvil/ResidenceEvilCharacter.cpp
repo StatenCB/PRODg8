@@ -77,21 +77,12 @@ void AResidenceEvilCharacter::Tick(float DeltaSeconds)
 	// Update the timer.
 	if (!bCanCheckForBatteries)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Timer %f"), CanCheckBatteriesTimer)
+		CanCheckBatteriesTimer += DeltaSeconds;
 		if (CanCheckBatteriesTimer >= CheckForBatteriesFeedbackCooldown)
 		{
 			bCanCheckForBatteries = true;
 			OnCanCheckForBatteries();
 			CanCheckBatteriesTimer = 0.0f;
-		}
-		CanCheckBatteriesTimer += DeltaSeconds;
-
-	}
-	if (CurrentRoom)
-	{
-		if (CurrentRoom->PerformedBatteryCheck)
-		{
-			OnPerformedSuccessfulBatteryCheck();
 		}
 	}
 }
@@ -111,7 +102,6 @@ void AResidenceEvilCharacter::BeginPlay()
 	}
 
 	StopFeeling();
-	AllowCheckInputBattery();
 }
 
 
@@ -155,11 +145,6 @@ void AResidenceEvilCharacter::SetupPlayerInputComponent(class UInputComponent* P
 void AResidenceEvilCharacter::RemovePickUp()
 {
 	CurrentPickUp = nullptr;
-}
-
-void AResidenceEvilCharacter::OnPerformedSuccessfulBatteryCheck()
-{
-	bCanCheckForBatteries = false;
 }
 
 void AResidenceEvilCharacter::Move(const FInputActionValue& Value)
@@ -264,10 +249,16 @@ void AResidenceEvilCharacter::OpenDoor()
 
 void AResidenceEvilCharacter::TryCheckForBatteries()
 {
-	if (bAllowedToCheckBattery)
+	float CurrentTime = GetWorld()->GetTimeSeconds();
+
+	if (bCanCheckForBatteries)
 	{
-		GetWorldTimerManager().SetTimer(AllowBatteryInputHandle, this, &AResidenceEvilCharacter::PerformBatteryButtonPress, 0.1f, false, 0.1f);
+		CheckForBatteries();
+		TimeSinceLastBatteryCheck = CurrentTime;
+		return;
 	}
+	UE_LOG(LogTemp, Warning, TEXT("Button pressed after cooldown"));
+	OnDeniedCheckForBatteries();
 }
 
 
@@ -277,32 +268,6 @@ void AResidenceEvilCharacter::CheckForBatteries()
 	{
 		CurrentRoom->OnCheckValidBatteries();
 	}
-}
-
-void AResidenceEvilCharacter::ResetInputBatteriesTimer()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Cant press button"));
-	bAllowedToCheckBattery = false;
-	GetWorldTimerManager().SetTimer(ResetTimerHandle, this, &AResidenceEvilCharacter::AllowCheckInputBattery, 0.1f, false, 1.f);
-}
-
-void AResidenceEvilCharacter::AllowCheckInputBattery()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Can press button"));
-	bAllowedToCheckBattery = true;
-}
-
-void AResidenceEvilCharacter::PerformBatteryButtonPress()
-{
-	if (bCanCheckForBatteries)
-	{
-		CheckForBatteries();
-	}else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Button pressed after cooldown"));
-		OnDeniedCheckForBatteries();
-	}
-	GetWorldTimerManager().SetTimer(DenyBatteryInputHandle, this, &AResidenceEvilCharacter::AllowCheckInputBattery, AllowBatteryInputDelay, false, AllowBatteryInputDelay);
 }
 
 
