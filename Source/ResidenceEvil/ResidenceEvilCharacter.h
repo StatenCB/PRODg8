@@ -111,14 +111,31 @@ public:
 	void OnDeniedCheckForBatteries();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float CheckForBatteriesFeedbackCooldown = 2.f;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	float TimeSinceLastBatteryCheck = 0.f;
-
+	float CheckForBatteriesFeedbackCooldown = 10.f;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bCanCheckForBatteries = false;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bAllowedToCheckBattery = false;
+
+	FTimerHandle ResetTimerHandle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ResetTimerDelay = 2.f;
+
+	
+
+	FTimerHandle AllowBatteryInputHandle;
+	FTimerHandle DenyBatteryInputHandle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AllowBatteryInputDelay = 2.f;
+
+
+	UFUNCTION()
+	void OnPerformedSuccessfulBatteryCheck();
+	
 protected:
 
 	/** Called for movement input */
@@ -164,6 +181,14 @@ protected:
 	void CheckForBatteries();
 
 	float CanCheckBatteriesTimer = 0.f;
+
+	void ResetInputBatteriesTimer();
+
+	void AllowCheckInputBattery();
+
+	void PerformBatteryButtonPress();
+
+	
 
 public:
 	/** Returns CameraBoom subobject **/

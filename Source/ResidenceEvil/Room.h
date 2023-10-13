@@ -91,6 +91,17 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnCheckValidBatteries();
 
+	UFUNCTION(BlueprintCallable)
+	void AllowBatteryCheck(){ OnCheckValidBatteriesAllowed(); }
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnCheckValidBatteriesAllowed();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool PerformedBatteryCheck = false;
+
+	
+	
 private:
 	void SpreadFire();
 

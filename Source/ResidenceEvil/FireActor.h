@@ -28,6 +28,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UAudioComponent* AudioComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UAudioComponent* BurstAudioComponent;
+
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	USphereComponent* FireActorBoundsComponent;
 
