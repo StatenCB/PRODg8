@@ -28,11 +28,11 @@ AResidenceEvilCharacter::AResidenceEvilCharacter()
 		
 	// Only rotate on yaw axis
 	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = true;
+	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
 	// Configure character movement
-	GetCharacterMovement()->bOrientRotationToMovement = false; // Character moves in the direction of input...	
+	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
 
 	// Note: For faster iteration times these variables, and many more, can be tweaked in the Character Blueprint
@@ -47,7 +47,7 @@ AResidenceEvilCharacter::AResidenceEvilCharacter()
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 20.0f; // The camera follows at this distance behind the character	
-	CameraBoom->bUsePawnControlRotation = false; // Dont rotate freely, follow behind player
+	CameraBoom->bUsePawnControlRotation = true; // Dont rotate freely, follow behind player
 	
 
 	// Create a follow camera
@@ -186,7 +186,7 @@ void AResidenceEvilCharacter::Move(const FInputActionValue& Value)
 		//AddMovementInput(RightDirection, MovementVector.X);
 
 		// rotate to direction
-		AddControllerYawInput(LookAxisVector.X);
+		//AddControllerYawInput(LookAxisVector.X);
 		
 	}
 }
@@ -201,7 +201,9 @@ void AResidenceEvilCharacter::MoveArm(const FInputActionValue& Value)
 	{
 		// add yaw and pitch input to controller
 		//Arm->SetActorRelativeRotation(NewRotator);
+		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
+		
 	}
 }
 
