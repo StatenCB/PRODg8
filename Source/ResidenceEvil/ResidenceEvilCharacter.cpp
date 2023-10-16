@@ -171,9 +171,7 @@ void AResidenceEvilCharacter::Move(const FInputActionValue& Value)
 		// add movement 
 		AddMovementInput(ForwardDirection, MovementVector.Y);
 		//AddMovementInput(RightDirection, MovementVector.X);
-
-		// rotate to direction
-		//AddControllerYawInput(LookAxisVector.X);
+		
 		
 	}
 }
