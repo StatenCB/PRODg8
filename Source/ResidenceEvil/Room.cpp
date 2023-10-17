@@ -102,7 +102,7 @@ void ARoom::Tick(float DeltaTime)
 			SpreadFire();
 		}
 		
-		if(!bKilledPlayer && bPlayerInRoom && FireLevel > FireSpreadThreshold)
+		if(!bKilledPlayer && bPlayerInRoom && FireLevel > FireDeathThreshold)
 		{
 			bKilledPlayer = true;
 			UGameplayStatics::PlaySound2D(this, GameOverSound);
@@ -116,7 +116,7 @@ void ARoom::Tick(float DeltaTime)
 
 void ARoom::ResetLevel() const
 {
-	UGameplayStatics::OpenLevelBySoftObjectPtr(this,LevelToLoad);
+	UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(),LevelToLoad);
 }
 
 void ARoom::GatherOverlappingFireActors()
