@@ -82,6 +82,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int NumberOfBatteries = 0;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bHasStartedInitialFire = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bHasCarBattery;
