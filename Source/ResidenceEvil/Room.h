@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Room.generated.h"
 
+class AInteractableDoor;
 class AInteractableObject;
 class AFireActor;
 class USoundCue;
@@ -50,6 +51,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	TArray<AFireActor*> FireActors;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<AInteractableDoor*> DoorActors;
+
 	UPROPERTY(EditAnywhere)
 	TArray<AInteractableObject*> BatteryActors;
 
@@ -91,6 +95,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnCheckValidBatteries();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnCheckDoorLocations();
+
 	UFUNCTION(BlueprintCallable)
 	void AllowBatteryCheck(){ OnCheckValidBatteriesAllowed(); }
 	
@@ -115,7 +122,11 @@ private:
 	FTimerHandle  GatherOverlappingFireActorsHandle;
 
 	FTimerHandle  GatherOverlappingBatteriesHandle;
-
+	
+	FTimerHandle  GatherOverlappingDoorsHandle;
 	
 	void GatherOverlappingFireActors();
+
+	void GatherOverlappingDoorActors();
+
 };
