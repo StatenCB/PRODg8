@@ -33,10 +33,10 @@ public:
 	UPROPERTY(EditAnywhere)
 	double FireLevel;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	double FireSpreadThreshold = 10;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	double FireDeathThreshold = 20;
 
 	UPROPERTY(EditAnywhere)

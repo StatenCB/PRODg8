@@ -6,6 +6,8 @@
 UREGUS::UREGUS(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
 {
 	FireTimerMultiplier = 1.f;
+	AnimationPlaySpeedMultiplier = 1.f;
+	DoorMovePlayerSoundVolumeMultiplier = 1.f;
 }
 
 UREGUS* UREGUS::GetREGUS()
