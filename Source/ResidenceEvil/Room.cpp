@@ -4,6 +4,7 @@
 #include "Room.h"
 
 #include "FireActor.h"
+#include "InteractableDoor.h"
 #include "InteractableObject.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
@@ -75,6 +76,8 @@ void ARoom::BeginPlay()
 
 	GetWorldTimerManager().SetTimer(GatherOverlappingFireActorsHandle, this, &ARoom::GatherOverlappingFireActors, 0.1f, false);
 	GetWorldTimerManager().SetTimer(GatherOverlappingBatteriesHandle, this, &ARoom::CheckForValidBatteries, 0.1f, false);
+	GetWorldTimerManager().SetTimer(GatherOverlappingDoorsHandle, this, &ARoom::GatherOverlappingDoorActors, 0.1f, false);
+
 
 }
 
@@ -130,6 +133,22 @@ void ARoom::GatherOverlappingFireActors()
 		if(ensure( FireActor != nullptr)) FireActors.Add(FireActor);
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Added %i fireactors"), FireActors.Num());
+}
+
+void ARoom::GatherOverlappingDoorActors()
+{
+	TArray<AActor*> OverlappingDoorActors;
+	RoomBounds->GetOverlappingActors(OverlappingDoorActors, AInteractableDoor::StaticClass());
+	for (AActor* OverlappingActor : OverlappingDoorActors)
+	{
+		AInteractableDoor* DoorActor = Cast<AInteractableDoor>(OverlappingActor);
+		if (ensure(DoorActor != nullptr))
+		{
+			DoorActors.Add(DoorActor);
+		}
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Added %i doors"), DoorActors.Num());
+
 }
 
 

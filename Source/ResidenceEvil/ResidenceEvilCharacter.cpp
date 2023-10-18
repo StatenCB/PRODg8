@@ -77,7 +77,6 @@ void AResidenceEvilCharacter::Tick(float DeltaSeconds)
 	// Update the timer.
 	if (!bCanCheckForBatteries)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Timer %f"), CanCheckBatteriesTimer)
 		if (CanCheckBatteriesTimer >= CheckForBatteriesFeedbackCooldown)
 		{
 			bCanCheckForBatteries = true;
@@ -275,6 +274,7 @@ void AResidenceEvilCharacter::CheckForBatteries()
 	if (CurrentRoom)
 	{
 		CurrentRoom->OnCheckValidBatteries();
+		CurrentRoom->OnCheckDoorLocations();
 	}
 }
 
