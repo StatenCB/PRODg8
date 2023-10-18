@@ -109,6 +109,7 @@ void ARoom::Tick(float DeltaTime)
 		{
 			bKilledPlayer = true;
 			UGameplayStatics::PlaySound2D(this, GameOverSound);
+			DeathEvent();
 			FTimerHandle TimerHandle;
 			
 			GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ARoom::ResetLevel, TimeUntilRestart); 

@@ -107,6 +107,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool PerformedBatteryCheck = false;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void DeathEvent();
+
 	
 	
 private:
