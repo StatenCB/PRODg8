@@ -20,4 +20,10 @@ public:
 	
 	UPROPERTY(Config, BlueprintReadOnly)
 	float FireTimerMultiplier;
+
+	UPROPERTY(Config, BlueprintReadOnly)
+	float AnimationPlaySpeedMultiplier;
+
+	UPROPERTY(Config, BlueprintReadOnly)
+	float DoorMovePlayerSoundVolumeMultiplier;
 };
