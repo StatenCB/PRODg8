@@ -63,8 +63,11 @@ void ARoom::SpreadFire()
 {
 	bFireSpread = true;
 	for(ARoom* Room : NeighboringRooms)
-	{
-		Room->StartFire();
+	{   
+	    if (!Room->bFireStarted)
+	    {
+	    	Room->StartFire();
+	    }
 	}
 }
 
