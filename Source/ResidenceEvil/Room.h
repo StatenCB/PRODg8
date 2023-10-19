@@ -63,7 +63,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	TArray<ARoom*> NeighboringRooms;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bFireStarted = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
