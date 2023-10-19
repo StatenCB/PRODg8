@@ -42,7 +42,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	UBoxComponent* RoomBounds;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UAudioComponent* AudioComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
