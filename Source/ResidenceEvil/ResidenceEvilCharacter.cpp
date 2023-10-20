@@ -75,17 +75,20 @@ void AResidenceEvilCharacter::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 
 	// Update the timer.
-	if (!bCanCheckForBatteries)
+	if(!bBatteryCheckBlocked)
 	{
-		if (CanCheckBatteriesTimer >= CheckForBatteriesFeedbackCooldown)
+		if (!bCanCheckForBatteries)
 		{
-			bCanCheckForBatteries = true;
-			OnCanCheckForBatteries();
-			CanCheckBatteriesTimer = 0.0f;
+			if (CanCheckBatteriesTimer >= CheckForBatteriesFeedbackCooldown)
+			{
+				bCanCheckForBatteries = true;
+				OnCanCheckForBatteries();
+				CanCheckBatteriesTimer = 0.0f;
+			}
+			CanCheckBatteriesTimer += DeltaSeconds;
 		}
-		CanCheckBatteriesTimer += DeltaSeconds;
-
 	}
+	
 	if (CurrentRoom)
 	{
 		if (CurrentRoom->PerformedBatteryCheck)
@@ -273,8 +276,15 @@ void AResidenceEvilCharacter::CheckForBatteries()
 {
 	if (CurrentRoom)
 	{
-		CurrentRoom->OnCheckValidBatteries();
-		CurrentRoom->OnCheckDoorLocations();
+		if(CurrentRoom->bIsGarage || bHasCarBattery)
+		{
+			CurrentRoom->OnPlayStatic();
+		}
+		else
+		{
+			CurrentRoom->OnCheckValidBatteries();
+			CurrentRoom->OnCheckDoorLocations();
+		}
 	}
 }
 
@@ -293,15 +303,18 @@ void AResidenceEvilCharacter::AllowCheckInputBattery()
 
 void AResidenceEvilCharacter::PerformBatteryButtonPress()
 {
-	if (bCanCheckForBatteries)
+	if(!bBatteryCheckBlocked)
 	{
-		CheckForBatteries();
-	}else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Button pressed after cooldown"));
-		OnDeniedCheckForBatteries();
+		if (bCanCheckForBatteries)
+		{
+			CheckForBatteries();
+		}else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Button pressed after cooldown"));
+			OnDeniedCheckForBatteries();
+		}
+		GetWorldTimerManager().SetTimer(DenyBatteryInputHandle, this, &AResidenceEvilCharacter::AllowCheckInputBattery, AllowBatteryInputDelay, false, AllowBatteryInputDelay);	
 	}
-	GetWorldTimerManager().SetTimer(DenyBatteryInputHandle, this, &AResidenceEvilCharacter::AllowCheckInputBattery, AllowBatteryInputDelay, false, AllowBatteryInputDelay);
 }
 
 

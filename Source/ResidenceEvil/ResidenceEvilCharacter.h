@@ -122,6 +122,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bAllowedToCheckBattery = false;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bBatteryCheckBlocked = true;
+
 	FTimerHandle ResetTimerHandle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
