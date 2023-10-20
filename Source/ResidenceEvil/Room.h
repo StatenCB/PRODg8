@@ -69,6 +69,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bPlayerInRoom = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsGarage = false;
+
 	//UPROPERTY(EditAnywhere)
 	//USoundBase* FireSound;
 
@@ -97,6 +100,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnCheckDoorLocations();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnPlayStatic();
 
 	UFUNCTION(BlueprintCallable)
 	void AllowBatteryCheck(){ OnCheckValidBatteriesAllowed(); }
