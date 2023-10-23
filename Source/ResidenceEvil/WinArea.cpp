@@ -43,7 +43,7 @@ void AWinArea::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 	{
 		WinGame();
 		FDateTime EndTime = FDateTime::UtcNow();
-		UE_LOG(LogTemp, Display, TEXT("%s ms end"), *EndTime.ToString())
+		UE_LOG(LogTemp, Display, TEXT("%s ms Player finished game"), *EndTime.ToString())
 	}
 }
 

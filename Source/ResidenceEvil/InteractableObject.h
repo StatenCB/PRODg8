@@ -33,6 +33,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnPickUpDestroy();
 
+	UFUNCTION(BlueprintCallable)
+	void LogPickUpTimeAndLocation();
+
 	UPROPERTY(BlueprintReadWrite)
 	ARoom* CurrentRoom = nullptr;
 

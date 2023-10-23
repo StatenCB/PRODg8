@@ -47,7 +47,7 @@ void AFireActor::Tick(float DeltaTime)
 		DistanceToPlayer = FVector::Distance(GetActorLocation(), PLayerCharacter->GetActorLocation());
 
 		//AudioComponent->VolumeMultiplier = 0.1 + (DistanceToPlayer / FireSpreadThreshold) * 0.3f;
-		if (bIsFirstToStartFire) GEngine->AddOnScreenDebugMessage(-1, 0.20f, FColor::Red, FString::Printf(TEXT("Volume multiuplier %f"), AudioComponent->VolumeMultiplier));
+		//if (bIsFirstToStartFire) GEngine->AddOnScreenDebugMessage(-1, 0.20f, FColor::Red, FString::Printf(TEXT("Volume multiuplier %f"), AudioComponent->VolumeMultiplier));
 
 
 		// Ensure that the VolumeMultiplier is clamped between 0.0 and 1.0

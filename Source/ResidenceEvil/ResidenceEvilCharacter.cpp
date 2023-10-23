@@ -290,14 +290,14 @@ void AResidenceEvilCharacter::CheckForBatteries()
 
 void AResidenceEvilCharacter::ResetInputBatteriesTimer()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Cant press button"));
+	//UE_LOG(LogTemp, Warning, TEXT("Cant press button"));
 	bAllowedToCheckBattery = false;
 	GetWorldTimerManager().SetTimer(ResetTimerHandle, this, &AResidenceEvilCharacter::AllowCheckInputBattery, 0.1f, false, 1.f);
 }
 
 void AResidenceEvilCharacter::AllowCheckInputBattery()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Can press button"));
+	//UE_LOG(LogTemp, Warning, TEXT("Can press button"));
 	bAllowedToCheckBattery = true;
 }
 
@@ -310,7 +310,7 @@ void AResidenceEvilCharacter::PerformBatteryButtonPress()
 			CheckForBatteries();
 		}else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Button pressed after cooldown"));
+			//UE_LOG(LogTemp, Warning, TEXT("Button pressed after cooldown"));
 			OnDeniedCheckForBatteries();
 		}
 		GetWorldTimerManager().SetTimer(DenyBatteryInputHandle, this, &AResidenceEvilCharacter::AllowCheckInputBattery, AllowBatteryInputDelay, false, AllowBatteryInputDelay);	
