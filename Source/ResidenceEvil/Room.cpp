@@ -55,7 +55,7 @@ void ARoom::CheckForValidBatteries()
 		}
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("battery count %i"), BatteryCount);
+	//UE_LOG(LogTemp, Warning, TEXT("battery count %i"), BatteryCount);
 
 }
 
@@ -97,7 +97,7 @@ void ARoom::Tick(float DeltaTime)
 			if (FireActor->bIsFirstToStartFire && !FireActor->bIsSetOnFire)
 			{
 				FDateTime StartTime = FDateTime::UtcNow();
-				UE_LOG(LogTemp, Display, TEXT("%s ms start"), *StartTime.ToString())
+				UE_LOG(LogTemp, Display, TEXT("%s ms PLayer started fire"), *StartTime.ToString())
 				FireActor->StartFireFromRoom(this);
 			}
 		}
@@ -111,6 +111,9 @@ void ARoom::Tick(float DeltaTime)
 		if(!bKilledPlayer && bPlayerInRoom && FireLevel > FireDeathThreshold)
 		{
 			bKilledPlayer = true;
+			FDateTime EndTime = FDateTime::UtcNow();
+			FVector DeathLocation = GetActorLocation();
+			UE_LOG(LogTemp, Display, TEXT("%s ms PLayer died in fire, at location %f, %f, %f in room %s"), *EndTime.ToString(), DeathLocation.X, DeathLocation.Y, DeathLocation.Z, *RoomName);
 			UGameplayStatics::PlaySound2D(this, GameOverSound);
 			DeathEvent();
 			FTimerHandle TimerHandle;
@@ -136,7 +139,7 @@ void ARoom::GatherOverlappingFireActors()
 		AFireActor* FireActor = Cast<AFireActor>(OverlappingActor);
 		if(ensure( FireActor != nullptr)) FireActors.Add(FireActor);
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Added %i fireactors"), FireActors.Num());
+	//UE_LOG(LogTemp, Warning, TEXT("Added %i fireactors"), FireActors.Num());
 }
 
 void ARoom::GatherOverlappingDoorActors()
@@ -151,8 +154,7 @@ void ARoom::GatherOverlappingDoorActors()
 			DoorActors.Add(DoorActor);
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Added %i doors"), DoorActors.Num());
-
+	//UE_LOG(LogTemp, Warning, TEXT("Added %i doors"), DoorActors.Num());
 }
 
 

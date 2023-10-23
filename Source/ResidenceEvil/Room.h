@@ -32,6 +32,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	double FireLevel;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString RoomName = "NoName";
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	double FireSpreadThreshold = 10;
@@ -51,7 +54,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	TArray<AFireActor*> FireActors;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<AInteractableDoor*> DoorActors;
 
 	UPROPERTY(EditAnywhere)
