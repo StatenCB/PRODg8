@@ -32,4 +32,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
     void MovePlayer();
 
+	UFUNCTION(BlueprintCallable)
+	void LogDoor();
+
 };

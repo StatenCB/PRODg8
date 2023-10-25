@@ -33,3 +33,10 @@ void AInteractableDoor::Tick(float DeltaTime)
 
 }
 
+void AInteractableDoor::LogDoor()
+{
+	FString DoorName = GetName();
+	UE_LOG(LogTemp, Display, TEXT("Player Opened door %s"), *DoorName);
+}
+
+
