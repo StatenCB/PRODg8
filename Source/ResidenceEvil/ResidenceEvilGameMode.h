@@ -13,6 +13,17 @@ class AResidenceEvilGameMode : public AGameModeBase
 
 public:
 	AResidenceEvilGameMode();
+
+	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable)
+	void AddToLog(FString TextToLog);
+
+	UFUNCTION(BlueprintCallable)
+	void WinGameLog();
+
+private:
+	FString FilePath;
 };
 
 

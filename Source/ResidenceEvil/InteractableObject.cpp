@@ -4,6 +4,8 @@
 #include "InteractableObject.h"
 
 #include "Components/SphereComponent.h"
+#include "ResidenceEvilGameMode.h"
+#include "Kismet/KismetStringLibrary.h"
 
 // Sets default values
 AInteractableObject::AInteractableObject()
@@ -35,5 +37,6 @@ void AInteractableObject::LogPickUpTimeAndLocation()
 	FDateTime PickupTime = FDateTime::UtcNow();
 	FVector PickupLoc = GetActorLocation();
 	UE_LOG(LogTemp, Display, TEXT("%s ms Player picked up battery, at location %f, %f, %f"), *PickupTime.ToString(), PickupLoc.X, PickupLoc.Y, PickupLoc.Z);
+	Cast<AResidenceEvilGameMode>(GetWorld()->GetAuthGameMode())->AddToLog("" + PickupTime.ToString() + " ms Player picked up battery, at location " + UKismetStringLibrary::Conv_VectorToString(PickupLoc));
 }
 

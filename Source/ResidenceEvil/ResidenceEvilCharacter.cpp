@@ -12,6 +12,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InteractableObject.h"
+#include "ResidenceEvilGameMode.h"
 #include "Room.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -276,6 +277,7 @@ void AResidenceEvilCharacter::CheckForBatteries()
 {
 	if (CurrentRoom)
 	{
+		Cast<AResidenceEvilGameMode>(GetWorld()->GetAuthGameMode())->AddToLog(FDateTime::UtcNow().ToString() + " ms Player checked for batteries in " + CurrentRoom->RoomName);
 		if(CurrentRoom->bIsGarage || bHasCarBattery)
 		{
 			CurrentRoom->OnPlayStatic();

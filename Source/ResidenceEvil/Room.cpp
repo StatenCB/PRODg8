@@ -9,6 +9,8 @@
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "ResidenceEvilGameMode.h"
+#include "Kismet/KismetStringLibrary.h"
 
 
 // Sets default values
@@ -97,7 +99,8 @@ void ARoom::Tick(float DeltaTime)
 			if (FireActor->bIsFirstToStartFire && !FireActor->bIsSetOnFire)
 			{
 				FDateTime StartTime = FDateTime::UtcNow();
-				UE_LOG(LogTemp, Display, TEXT("%s ms PLayer started fire"), *StartTime.ToString())
+				UE_LOG(LogTemp, Display, TEXT("%s ms PLayer started fire"), *StartTime.ToString());
+				Cast<AResidenceEvilGameMode>(GetWorld()->GetAuthGameMode())->AddToLog("" + StartTime.ToString() + " ms PLayer started fire");
 				FireActor->StartFireFromRoom(this);
 			}
 		}
@@ -114,6 +117,7 @@ void ARoom::Tick(float DeltaTime)
 			FDateTime EndTime = FDateTime::UtcNow();
 			FVector DeathLocation = GetActorLocation();
 			UE_LOG(LogTemp, Display, TEXT("%s ms PLayer died in fire, at location %f, %f, %f in room %s"), *EndTime.ToString(), DeathLocation.X, DeathLocation.Y, DeathLocation.Z, *RoomName);
+			Cast<AResidenceEvilGameMode>(GetWorld()->GetAuthGameMode())->AddToLog("" + EndTime.ToString() + " ms Player died in fire at location " + UKismetStringLibrary::Conv_VectorToString(DeathLocation) + " in room " + RoomName);
 			UGameplayStatics::PlaySound2D(this, GameOverSound);
 			DeathEvent();
 			FTimerHandle TimerHandle;
