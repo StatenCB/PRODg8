@@ -4,6 +4,7 @@
 #include "InteractableDoor.h"
 
 #include "Components/BoxComponent.h"
+#include "ResidenceEvilGameMode.h"
 
 // Sets default values
 AInteractableDoor::AInteractableDoor()
@@ -37,6 +38,8 @@ void AInteractableDoor::LogDoor()
 {
 	FString DoorName = GetName();
 	UE_LOG(LogTemp, Display, TEXT("Player Opened door %s"), *DoorName);
+	FString DoorLogEntry = "" + FDateTime::UtcNow().ToString() + " ms Player opened door " + DoorName;
+	Cast<AResidenceEvilGameMode>(GetWorld()->GetAuthGameMode())->AddToLog(DoorLogEntry);
 }
 
 
